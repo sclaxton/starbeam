@@ -46,7 +46,14 @@ export interface RendererManager<C extends object> {
   readonly getApp?: (instance: C) => object | undefined;
   readonly setupValue: <T>(instance: C, create: () => T) => T;
   readonly setupRef: <T>(instance: C, value: T) => { readonly current: T };
+
+  /** Create a framework-native notifier for adapters that need one. */
   readonly createNotifier: (instance: C) => () => void;
+
+  /**
+   * Create a scheduler during setup. Shared resource setup registers scheduler
+   * handlers and runtime subscriptions when the component mounts.
+   */
   readonly createScheduler: (instance: C) => Scheduler;
   readonly on: {
     readonly mounted: (instance: C, handler: Handler) => void;
