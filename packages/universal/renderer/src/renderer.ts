@@ -91,7 +91,7 @@ class LifecycleImpl implements Lifecycle {
   };
 
   get lifetime(): object {
-    return this.#manager.getComponent() as object;
+    return this.#component;
   }
 
   use = <T>(blueprint: IntoResourceBlueprint<T>): T =>
@@ -182,6 +182,6 @@ export function managerSetupService<T>(
 
 export type Handler = () => void;
 
-export function runHandlers(handlers: Set<() => void>): void {
+export function runHandlers(handlers: ReadonlySet<Handler>): void {
   handlers.forEach((handler) => void handler());
 }
