@@ -121,6 +121,7 @@ export default function typescript(
         toplevel: true,
         properties: {
           builtins: false,
+          reserved: ["attach", "into"],
         },
       },
       module: true,
