@@ -8,6 +8,7 @@ import { globby, globbySync } from "globby";
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(currentDir, "../..");
 const rootTypesDir = resolve(root, "dist/types");
+const publicObjectPropertyKeys = readPublicObjectPropertyKeys();
 
 const packageJsonPaths = await globby("**/package.json", {
   cwd: root,
@@ -54,11 +55,48 @@ const privatePackageNames = new Set(
     .map(({ manifest }) => manifest.name),
 );
 
+const publicObjectPropertyContracts = [
+  {
+    packageName: "@starbeam/renderer",
+    file: "dist/index.production.js",
+    properties: [
+      { key: "sync", pattern: /\bsync\s*:/u },
+      { key: "value", pattern: /\bvalue\s*:/u },
+      { key: "finalize", pattern: /\bfinalize\s*:/u },
+    ],
+  },
+  {
+    packageName: "@starbeam/svelte",
+    file: "dist/index.production.js",
+    properties: [
+      { key: "attach", pattern: /\battach\s*:/u },
+      { key: "into", pattern: /\binto\s*:/u },
+    ],
+  },
+  {
+    packageName: "@starbeam/vue",
+    file: "dist/index.production.js",
+    properties: [
+      { key: "directive", pattern: /\bdirective\s*:/u },
+      { key: "into", pattern: /(?:\binto\s*:|\.into\b)/u },
+      { key: "mounted", pattern: /\bmounted\s*(?::|=|\()/u },
+      { key: "unmounted", pattern: /\bunmounted\s*(?::|=|\()/u },
+      { key: "value", pattern: /(?:\bvalue\s*:|\.value\b)/u },
+    ],
+  },
+  {
+    packageName: "@starbeam/vue",
+    file: "dist/setup.production.js",
+    properties: [{ key: "install", pattern: /\binstall\s*:/u }],
+  },
+];
+
 let errors = [];
 
 for (let pkg of publicPackages) {
   validateManifest(pkg);
   validateArtifacts(pkg);
+  validatePublicObjectProperties(pkg);
 }
 
 if (errors.length > 0) {
@@ -74,6 +112,26 @@ if (errors.length > 0) {
 }
 
 console.info(`Verified ${publicPackages.length} publishable packages.`);
+
+function readPublicObjectPropertyKeys() {
+  let file = resolve(
+    root,
+    "workspace/dev-compile/src/rollup/plugins/typescript.ts",
+  );
+  let content = readFileSync(file, "utf8");
+  let match =
+    /PUBLIC_OBJECT_PROPERTY_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/u.exec(
+      content,
+    );
+
+  if (!match) {
+    throw new Error(
+      "Could not find PUBLIC_OBJECT_PROPERTY_KEYS in build config",
+    );
+  }
+
+  return new Set([...match[1].matchAll(/"([^"]+)"/gu)].map(([, key]) => key));
+}
 
 function validateManifest(pkg) {
   let { manifest } = pkg;
@@ -147,6 +205,45 @@ function validateArtifacts(pkg) {
   for (let file of findRootDeclarations(pkg)) {
     scanFileForPrivateReferences(pkg, file, scannedFiles);
     validateDeclarationMap(pkg, file);
+  }
+}
+
+function validatePublicObjectProperties(pkg) {
+  for (let contract of publicObjectPropertyContracts) {
+    if (contract.packageName !== pkg.manifest.name) {
+      continue;
+    }
+
+    let file = resolve(pkg.dir, contract.file);
+
+    if (!existsSync(file)) {
+      fail(
+        pkg,
+        `public object property contract artifact is missing: ${contract.file}`,
+        file,
+      );
+      continue;
+    }
+
+    let content = readFileSync(file, "utf8");
+
+    for (let { key, pattern } of contract.properties) {
+      if (!publicObjectPropertyKeys.has(key)) {
+        fail(
+          pkg,
+          `public object property ${key} is verified but not reserved from production property mangling`,
+          file,
+        );
+      }
+
+      if (!pattern.test(content)) {
+        fail(
+          pkg,
+          `production artifact does not preserve public object property ${key}`,
+          file,
+        );
+      }
+    }
   }
 }
 
