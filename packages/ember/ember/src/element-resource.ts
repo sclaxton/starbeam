@@ -93,7 +93,11 @@ class StarbeamElementResourceModifierManager {
   ): void {
     this.#consume(args);
     this.#teardown(state);
-    if (state.resourceElement) this.#setup(state, state.resourceElement);
+    const element = state.resourceElement;
+
+    if (element) {
+      this.#setup(state, element);
+    }
   }
 
   destroyModifier(state: ElementResourceModifierState<Element, unknown>): void {
