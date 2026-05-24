@@ -1,24 +1,67 @@
-# For every push to the primary branch with .release-plan.json modified,
-# runs release-plan.
+# Publishes stable releases from release-plan and unstable packages from main/master.
+# Both paths use npm trusted publishing through this workflow file.
 
-name: Publish Stable
+name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      channel:
+        description: Which release channel to publish
+        required: true
+        default: stable
+        type: choice
+        options:
+          - stable
+          - unstable
   push:
     branches:
       - main
       - master
-    paths:
-      - '.release-plan.json'
 
 concurrency:
-  group: publish-${{ github.head_ref || github.ref }}
+  group: publish-${{ github.head_ref || github.ref }}-${{ github.event.inputs.channel || 'push' }}
   cancel-in-progress: true
 
 jobs:
-  publish:
-    name: "NPM Publish"
+  publish-mode:
+    name: Choose publish mode
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.mode.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v6
+        if: github.event_name == 'push'
+        with:
+          fetch-depth: 0
+      - id: mode
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "mode=${{ github.event.inputs.channel }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          before="${{ github.event.before }}"
+          after="${{ github.sha }}"
+
+          if [[ "$before" == "0000000000000000000000000000000000000000" ]]; then
+            changed_files="$(git show --name-only --format= "$after")"
+          else
+            changed_files="$(git diff --name-only "$before" "$after")"
+          fi
+
+          if grep -qx ".release-plan.json" <<< "$changed_files"
+          then
+            echo "mode=stable" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=unstable" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish-stable:
+    name: NPM Publish (stable)
+    needs: publish-mode
+    if: needs.publish-mode.outputs.mode == 'stable'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -31,10 +74,36 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Publish to NPM
         run: NPM_CONFIG_PROVENANCE=true pnpm release-plan publish --access public
         env:
           GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-unstable:
+    name: NPM Publish (unstable)
+    needs: publish-mode
+    if: needs.publish-mode.outputs.mode == 'unstable'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build packages
+        run: pnpm build
+      - name: Set unstable versions
+        run: node ./workspace/unstable-release/src/version.js
+      - name: Publish unstable packages
+        run: NPM_CONFIG_PROVENANCE=true node ./workspace/unstable-release/src/publish.js
