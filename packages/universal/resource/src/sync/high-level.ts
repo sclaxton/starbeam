@@ -40,7 +40,8 @@ export class DefineSync {
       },
     },
 
-    /** @deprecated Use `on.lowLevel.finalize()` instead. */
+    // Keep this compatibility alias out of the normal authoring API docs.
+    /** @deprecated Compatibility alias. Use `on.lowLevel.finalize()` instead. */
     finalize: (handler: Cleanup): void => {
       this.#finalize = handler;
     },
