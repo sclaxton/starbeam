@@ -175,6 +175,64 @@ importers:
         specifier: ^4.1.4
         version: 4.1.4(@edge-runtime/vm@5.0.0)(@types/node@25.6.0)(@vitest/ui@4.1.4)(happy-dom@20.9.0)(jsdom@29.0.2)(vite@8.0.13(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
 
+  demos/table-ember:
+    dependencies:
+      '@fontsource/geist-sans':
+        specifier: ^5.2.5
+        version: 5.2.5
+      '@glimmer/component':
+        specifier: 2.1.1
+        version: 2.1.1
+      '@starbeam-demos/table-core':
+        specifier: workspace:*
+        version: link:../table-core
+      '@starbeam/ember':
+        specifier: workspace:^
+        version: link:../../packages/ember/ember
+      decorator-transforms:
+        specifier: 2.3.2
+        version: 2.3.2(@babel/core@7.29.0)
+      ember-source:
+        specifier: 6.10.1
+        version: 6.10.1(@glimmer/component@2.1.1)(rsvp@4.8.5)
+      vite:
+        specifier: ^8.0.8
+        version: 8.0.13(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+    devDependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@babel/plugin-transform-runtime':
+        specifier: 7.29.0
+        version: 7.29.0(@babel/core@7.29.0)
+      '@babel/plugin-transform-typescript':
+        specifier: 7.28.6
+        version: 7.28.6(@babel/core@7.29.0)
+      '@babel/runtime':
+        specifier: 7.29.2
+        version: 7.29.2
+      '@embroider/core':
+        specifier: 4.4.7
+        version: 4.4.7(@glint/template@1.7.7)
+      '@embroider/macros':
+        specifier: 1.20.2
+        version: 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/vite':
+        specifier: 1.7.3
+        version: 1.7.3(@embroider/core@4.4.7(@glint/template@1.7.7))(@glint/template@1.7.7)(vite@8.0.13(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@glint/ember-tsc':
+        specifier: 1.7.5
+        version: 1.7.5(ember-source@6.10.1(@glimmer/component@2.1.1)(rsvp@4.8.5))(typescript@6.0.3)
+      '@glint/template':
+        specifier: 1.7.7
+        version: 1.7.7
+      '@rollup/plugin-babel':
+        specifier: 6.1.0
+        version: 6.1.0(@babel/core@7.29.0)(@types/babel__core@7.20.5)(rollup@4.60.1)
+      babel-plugin-ember-template-compilation:
+        specifier: 4.0.0
+        version: 4.0.0
+
   demos/table-preact:
     dependencies:
       '@fontsource/geist-sans':
@@ -308,7 +366,7 @@ importers:
         version: link:../../../workspace/dev-compile
       ember-modifier:
         specifier: ^4.2.0
-        version: 4.3.0(@babel/core@7.29.0)
+        version: 4.3.0
       ember-source:
         specifier: ^6.0.0
         version: 6.10.1(@glimmer/component@2.1.1)(rsvp@4.8.5)
@@ -1927,15 +1985,45 @@ importers:
       '@astrojs/vue':
         specifier: ^5.1.4
         version: 5.1.4(@types/node@25.6.0)(astro@5.18.1(@types/node@25.6.0)(jiti@2.6.1)(rollup@4.60.1)(terser@5.46.1)(tsx@4.21.0)(typescript@6.0.3)(yaml@2.8.3))(esbuild@0.27.7)(jiti@2.6.1)(rollup@4.60.1)(terser@5.46.1)(tsx@4.21.0)(vue@3.5.32(typescript@6.0.3))(yaml@2.8.3)
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@babel/plugin-transform-runtime':
+        specifier: 7.29.0
+        version: 7.29.0(@babel/core@7.29.0)
+      '@babel/plugin-transform-typescript':
+        specifier: 7.28.6
+        version: 7.28.6(@babel/core@7.29.0)
+      '@babel/runtime':
+        specifier: 7.29.2
+        version: 7.29.2
+      '@embroider/core':
+        specifier: 4.4.7
+        version: 4.4.7(@glint/template@1.7.7)
+      '@embroider/macros':
+        specifier: 1.20.2
+        version: 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/vite':
+        specifier: 1.7.3
+        version: 1.7.3(@embroider/core@4.4.7(@glint/template@1.7.7))(@glint/template@1.7.7)(vite@8.0.13(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
       '@fontsource/geist-sans':
         specifier: ^5.2.5
         version: 5.2.5
+      '@glimmer/component':
+        specifier: 2.1.1
+        version: 2.1.1
       '@lucide/astro':
         specifier: ^1.17.0
         version: 1.17.0(astro@5.18.1(@types/node@25.6.0)(jiti@2.6.1)(rollup@4.60.1)(terser@5.46.1)(tsx@4.21.0)(typescript@6.0.3)(yaml@2.8.3))
+      '@rollup/plugin-babel':
+        specifier: 6.1.0
+        version: 6.1.0(@babel/core@7.29.0)(@types/babel__core@7.20.5)(rollup@4.60.1)
       '@starbeam-demos/table-core':
         specifier: workspace:*
         version: link:../../demos/table-core
+      '@starbeam-demos/table-ember':
+        specifier: workspace:*
+        version: link:../../demos/table-ember
       '@starbeam-demos/table-preact':
         specifier: workspace:*
         version: link:../../demos/table-preact
@@ -1948,6 +2036,9 @@ importers:
       '@starbeam-demos/table-vue':
         specifier: workspace:*
         version: link:../../demos/table-vue
+      '@starbeam/ember':
+        specifier: workspace:^
+        version: link:../../packages/ember/ember
       '@starbeam/preact':
         specifier: workspace:^
         version: link:../../packages/preact/preact
@@ -1969,6 +2060,15 @@ importers:
       astro-expressive-code:
         specifier: 0.41.7
         version: 0.41.7(astro@5.18.1(@types/node@25.6.0)(jiti@2.6.1)(rollup@4.60.1)(terser@5.46.1)(tsx@4.21.0)(typescript@6.0.3)(yaml@2.8.3))
+      babel-plugin-ember-template-compilation:
+        specifier: 4.0.0
+        version: 4.0.0
+      decorator-transforms:
+        specifier: 2.3.2
+        version: 2.3.2(@babel/core@7.29.0)
+      ember-source:
+        specifier: 6.10.1
+        version: 6.10.1(@glimmer/component@2.1.1)(rsvp@4.8.5)
       expressive-code-twoslash:
         specifier: 0.6.1
         version: 0.6.1(@expressive-code/core@0.41.7)(eslint@10.2.1(jiti@2.6.1))(expressive-code@0.41.7)(typescript@6.0.3)
@@ -2319,11 +2419,6 @@ packages:
   '@babel/helpers@7.29.2':
     resolution: {integrity: sha512-HoGuUs4sCZNezVEKdVcwqmZN8GoHirLUcLaYVNBK2J0DadGtdcqgr3BCbvH8+XUo4NGjNl3VOtSjEKNzqfFgKw==}
     engines: {node: '>=6.9.0'}
-
-  '@babel/parser@7.29.2':
-    resolution: {integrity: sha512-4GgRzy/+fsBa72/RZVJmGKPmZu9Byn8o4MoLpmNe1m8ZfYnz5emHLQz3U4gLud6Zwl0RZIcgiLD7Uq7ySFuDLA==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
 
   '@babel/parser@7.29.3':
     resolution: {integrity: sha512-b3ctpQwp+PROvU/cttc4OYl4MzfJUWy6FZg+PMXfzmt/+39iHVF0sDfqay8TQM3JA2EUOyKcFZt75jWriQijsA==}
@@ -11324,10 +11419,6 @@ snapshots:
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
 
-  '@babel/parser@7.29.2':
-    dependencies:
-      '@babel/types': 7.29.0
-
   '@babel/parser@7.29.3':
     dependencies:
       '@babel/types': 7.29.0
@@ -11948,7 +12039,7 @@ snapshots:
       '@babel/code-frame': 7.29.0
       '@babel/generator': 7.29.1
       '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.29.2
+      '@babel/parser': 7.29.3
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
       debug: 4.4.3
@@ -15763,7 +15854,7 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-modifier@4.3.0(@babel/core@7.29.0):
+  ember-modifier@4.3.0:
     dependencies:
       '@embroider/addon-shim': 1.10.2
       decorator-transforms: 2.3.2(@babel/core@7.29.0)
