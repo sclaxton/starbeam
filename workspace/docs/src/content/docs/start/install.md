@@ -8,15 +8,15 @@ Install the packages you import directly. Most apps need one framework adapter,
 
 ## What are you building?
 
-| If you are building…      | Install…                                                     | Start with…                                                                            |
-| ------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| A framework-neutral model | `@starbeam/universal @starbeam/collections`                  | `reactive` collections, domain objects, and `Resource`                                 |
-| A React app               | `@starbeam/react @starbeam/universal @starbeam/collections`  | `useReactive()`, `useResource()`, `useService()`, `useElementResource()`               |
-| A Preact app              | `@starbeam/preact @starbeam/universal @starbeam/collections` | `install(options)`, direct render reads, resource/service hooks                        |
-| An Ember app              | `@starbeam/ember @starbeam/universal @starbeam/collections`  | direct Glimmer-tracked reads, `setupResource()`, `setupService()`, element modifiers   |
-| A Vue app                 | `@starbeam/vue @starbeam/universal @starbeam/collections`    | `useReactive()`, `setupResource()`, `setupService()`, element-resource directives      |
-| A Svelte app              | `@starbeam/svelte @starbeam/universal @starbeam/collections` | current Svelte 5 slice: experimental `fromStarbeam()` and element-resource attachments |
-| A reusable library        | `@starbeam/universal @starbeam/collections`                  | framework-neutral state and domain-shaped APIs                                         |
+| If you are building…      | Install…                                                     | Start with…                                                                          |
+| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| A framework-neutral model | `@starbeam/universal @starbeam/collections`                  | `reactive` collections, domain objects, and `Resource`                               |
+| A React app               | `@starbeam/react @starbeam/universal @starbeam/collections`  | `useReactive()`, `useResource()`, `useService()`, `useElementResource()`             |
+| A Preact app              | `@starbeam/preact @starbeam/universal @starbeam/collections` | `install(options)`, direct render reads, resource/service hooks                      |
+| A Vue app                 | `@starbeam/vue @starbeam/universal @starbeam/collections`    | `useReactive()`, `setupResource()`, `setupService()`, element-resource directives    |
+| A Svelte app              | `@starbeam/svelte @starbeam/universal @starbeam/collections` | Svelte 5 read bridge: experimental `fromStarbeam()` and element-resource attachments |
+| An Ember app              | `@starbeam/ember @starbeam/universal @starbeam/collections`  | direct Glimmer-tracked reads, `setupResource()`, `setupService()`, element modifiers |
+| A reusable library        | `@starbeam/universal @starbeam/collections`                  | framework-neutral state and domain-shaped APIs                                       |
 
 ## Framework-neutral state
 
@@ -104,6 +104,25 @@ Vue uses `useReactive()` for direct template reads, `setupReactive()` when you
 want a specific Starbeam read as a Vue ref, and directives for element resources:
 [Vue](/frameworks/vue/).
 
+### Svelte
+
+```sh
+pnpm add @starbeam/svelte @starbeam/universal @starbeam/collections
+```
+
+```ts
+import {
+  elementResource,
+  elementResourceAttachment,
+  elementResourceStore,
+  fromStarbeam,
+} from "@starbeam/svelte";
+```
+
+Svelte currently exposes experimental Starbeam reads through `fromStarbeam()` and
+DOM element resources through Svelte 5 element-resource attachments. Component-resource and
+app-service helpers are not exposed yet. See [Svelte](/frameworks/svelte/).
+
 ### Ember
 
 ```sh
@@ -122,25 +141,6 @@ Ember's adapter mirrors Starbeam reads into Glimmer autotracking, so templates
 and getters can read Starbeam-backed domain objects directly. Use
 `setupResource()` for component-owned resources, `setupService()` for
 owner-scoped services, and modifiers for element resources: [Ember](/frameworks/ember/).
-
-### Svelte
-
-```sh
-pnpm add @starbeam/svelte @starbeam/universal @starbeam/collections
-```
-
-```ts
-import {
-  elementResource,
-  elementResourceAttachment,
-  elementResourceStore,
-  fromStarbeam,
-} from "@starbeam/svelte";
-```
-
-Svelte currently exposes experimental Starbeam reads through `fromStarbeam()` and
-DOM element resources through Svelte 5 attachments. Component-resource and
-app-service helpers are not exposed yet. See [Svelte](/frameworks/svelte/).
 
 ## Direct packages
 
